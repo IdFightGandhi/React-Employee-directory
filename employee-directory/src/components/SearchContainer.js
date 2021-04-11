@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SearchBar from "./SearchBar";
+import SearchBar from "./SearchBar/SearchBar";
 import API from "../utils/API";
 
 class SearchContainer extends Component {
