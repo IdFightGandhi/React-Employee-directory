@@ -50,35 +50,35 @@ handleFormSubmit = event => {
 
 };
 
-filterEmployees = (value) => { console.log("Search result: ", this.state.search)
-    const newArray = this.state.filteredUser.filter(item => {
+// filterEmployees = (value) => { console.log("Search result: ", this.state.search)
+//     const newArray = this.state.filteredUser.filter(item => {
 
-        let values = Object.values(item)
-        .join("")
-        .toLowerCase();
-        return values.indexOf(this.state.search.toLowerCase()) !== -1;
-    });
-    console.log(newArray);
-    this.setState({ filteredUser: newArray})
+//         let values = Object.values(item)
+//         .join("")
+//         .toLowerCase();
+//         return values.indexOf(this.state.search.toLowerCase()) !== -1;
+//     });
+//     console.log(newArray);
+//     this.setState({ filteredUser: newArray})
 
-}
+// }
 
 render() {
     return(
         <div className="container">
             <div className="row">
                 <div className="col-lg-12">
-                    <h1>Employee Directory</h1>
+                    
                 </div>
             </div>
             <div className="row">
             <div className="col-lg-6">
-                <SearchForm
+                <SearchBar
                 search={this.state.search}
                 handleFormSubmit={this.handleFormSubmit}
                 handleInputChange={this.handleInputChange}
                 />
-                <ResultList result={this.state.filteredUser} />
+                
             </div>
             </div>
 
