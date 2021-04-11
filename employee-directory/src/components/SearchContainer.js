@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SearchBar from "./SearchBar/SearchBar";
 import API from "../utils/API";
+import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
 
 class SearchContainer extends Component {
     state = {
@@ -93,6 +94,26 @@ sortBy =(key, primary =0, secondary = 0) => {
         });
     }
 };
+
+filteredEmployees = (input) => {
+    if (input) {
+        this.setState({
+            filteredEmployees: this.state.employees.filter((employee) => {
+                return (
+                    employee.name.first.toLowerCase()
+                    .concat("", employee.name.last.toLowerCase())
+                    .includes(input) ||
+                    employee.phone.includes(input) ||
+                    employee.phone.replace(/[^\w\s]/gi, "").includes(input) ||
+                    employee.email.includes(input) ||
+                    this.formatDate(employee.dob.date).includes(input)
+                );
+            }),
+        });
+    }else {
+        this.setState({ filteredEmployees: this.state.employees })
+    }
+}
 
 // filterEmployees = (value) => { console.log("Search result: ", this.state.search)
 //     const newArray = this.state.filteredUser.filter(item => {
