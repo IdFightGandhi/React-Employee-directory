@@ -45,7 +45,7 @@ handleFormSubmit = event => {
     console.log("HANDLE FORM SUBMIT")
     console.log(name);
     console.log(value);
-    this.filterEmployees();
+    // this.filterEmployees();
 
 
 };
@@ -91,9 +91,23 @@ render() {
                         <th scope="col">Email</th>
                         <th scope="col">Phone Number</th>
                         <th scope="col">D.O.B.</th>
+                    
                     </tr>
+                    {this.state.result.map(result => (
+                    <tr key={result.id}>
+
+                        <td>
+                            <img alt={result.name.first}  src={result.picture.thumbnail} />
+                        </td>
+                        <td>
+                            {result.name.first}
+                        </td>
+                    </tr>
+      ))}
+
                 </table>
             </div>
+            
         </div>
     );
 }
