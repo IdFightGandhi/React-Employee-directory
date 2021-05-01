@@ -9,7 +9,7 @@ class SearchContainer extends Component {
         filteredUser: [],
         search:"",
         filter:"",
-        filteredEmployees:[],
+        filteredEmployees:[{}],
         currentSort: "default",
         sortDirection: this.initialSortDirection,
     };
@@ -26,32 +26,40 @@ class SearchContainer extends Component {
     componentDidMount() {
         API.search()
         .then(res=>this.setState({
+            
             result:res.data.results,
             filteredEmployees: res.data.results
         })
+        
         )
         .catch(err => console.log(err));
+   
     
 };
 
 handleInputChange = event => {
     event.preventDefault();
     console.log(event);
-    const name = event.target.name;
+    const {name, value} =event.target;
+    console.log(name)
     // const value = event.target.value;
     console.log("HANDLE INPUT CHANGE")
-    console.log(name);
+    console.log({name, value});
     // console.log(value);
+    // const list = this.state.result.filter(item=>{
+    //     let inputValue = Object.values(item).join("").toLowerCase()
+    //     return inputValue.indexOf([name].toLowerCase())
+    // })
     this.setState({
-        [name]: name
+        [name]:value
+        // filteredEmployees:list
     });
-    this.filteredEmployees(name.toLowerCase().trim());
 };
 
 handleFormSubmit = event => {
     event.preventDefault();
     console.log(event)
-    const name = event.target.name;
+    const name = event.target.value;
     // const value = event.target.value;
     console.log("HANDLE FORM SUBMIT")
     console.log(name);
@@ -59,74 +67,7 @@ handleFormSubmit = event => {
     // this.filterEmployees();
 };
 
-sortBy =(key, primary =0, secondary = 0) => {
-    let sortedEmployees = this.state.filteredEmployees;
-    if (this.state.sortDirection[key]) {
-        this.setState({
-            filteredEmployees: sortedEmployees.reverse(),
-            sortDirection: {
-                ...this.initialSortDirection,
-                [key]: this.state.sortDirection[key] === "asc" ? "desc" : "asc",
-            },
-        });
-    }else {
-        sortedEmployees = this.state.filteredEmployees.sort((a,b) => {
-            a = a[key];
-            b = b[key];
 
-            if(primary) {
-                if (secondary && a[primary] === b[primary]) {
-                    return a[secondary].localeCompare(b[primary]);
-                }else {
-                    return a.localeCompare(b);
-                }
-            }
-            console.log(sortedEmployees)
-
-        });
-
-        this.setState({
-            filteredEmployees: sortedEmployees,
-            sortDirection: {
-                ...this.initialSortDirection,
-                [key]: "asc",
-            },
-        });
-    }
-};
-
-filteredEmployees = (input) => {
-    if (input) {
-        this.setState({
-            filteredEmployees: this.state.employees.filter((employee) => {
-                return (
-                    employee.name.first.toLowerCase()
-                    .concat("", employee.name.last.toLowerCase())
-                    .includes(input) ||
-                    employee.phone.includes(input) ||
-                    employee.phone.replace(/[^\w\s]/gi, "").includes(input) ||
-                    employee.email.includes(input) ||
-                    this.formatDate(employee.dob.date).includes(input)
-                );
-            }),
-        });
-    }else {
-        this.setState({ filteredEmployees: this.state.employees })
-    }
-}
-
-// filterEmployees = (value) => { console.log("Search result: ", this.state.search)
-//     const newArray = this.state.filteredUser.filter(item => {
-
-//         let values = Object.values(item)
-//         .join("")
-//         .toLowerCase();
-//         return values.indexOf(this.state.search.toLowerCase()) !== -1;
-//     });
-//     console.log(newArray);
-//     this.setState({ filteredUser: newArray})
-
-// }
 
 render() {
     return(
@@ -138,7 +79,7 @@ render() {
             </div>
             <div className="row">
             <div className="col-lg-6">
-                <SearchBar
+                <SearchBar key={this.state.search}
                 search={this.state.search}
                 handleFormSubmit={this.handleFormSubmit}
                 handleInputChange={this.handleInputChange}
@@ -149,17 +90,19 @@ render() {
 
             <div className="row">
                 <table className="table">
-                    <tr>
-                        <th scope="col">Employee Photo</th>
-                        <th scope="col">First Name</th>
-                        <th scope="col">Last Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">D.O.B.</th>
                     
-                    </tr>
+                    {/* <thead>
+                        <tr scope="col">Employee Photo</tr>
+                        <tr scope="col">First Name</tr>
+                        <tr scope="col">Last Name</tr>
+                        <tr scope="col">Email</tr>
+                        <tr scope="col">Phone Number</tr>
+                        <tr scope="col">D.O.B.</tr>
+                    
+                    </thead> */}
+                    <tbody>
                     {this.state.result.map(result => (
-                    <tr key={result.id}>
+                    <tr key={result.login.uuid}>
 
                         <td>
                             <img alt={result.name.first}  src={result.picture.thumbnail} />
@@ -186,6 +129,7 @@ render() {
                         
                     </tr>
       ))}
+                </tbody>
 
                 </table>
             </div>
